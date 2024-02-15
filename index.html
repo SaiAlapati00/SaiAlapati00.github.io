@@ -3,11 +3,96 @@
    <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
       <title>Saiteja Alapati</title>
+      <script src="https://waph-uc.github.io/clock.js"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+      <script>
+         function getCookie(name) {
+           var nameEQ = name + "=";
+           var ca = document.cookie.split(';');
+           for (var i = 0; i < ca.length; i++) {
+             var c = ca[i];
+             while (c.charAt(0) == ' ') {
+               c = c.substring(1, c.length);
+             }
+             if (c.indexOf(nameEQ) == 0) {
+               return c.substring(nameEQ.length, c.length);
+             }
+           }
+           return null;
+         }
+         
+         
+         function displayWelcomeMessage() {
+           var messageElement = document.getElementById("welcomeMessage");
+           if (getCookie("lastVisit") === null) {
+             messageElement.textContent = "Welcome to my homepage!";
+           } else {
+             var lastVisitTime = new Date(getCookie("lastVisit"));
+             messageElement.textContent = "Welcome back! Your last visit was " + lastVisitTime.toLocaleString();
+           }
+           name = "lastVisit";
+           value = new Date();
+           days = 365;
+           var expires = "";
+           if (days) {
+             var date = new Date();
+             date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+             expires = "; expires=" + date.toUTCString();
+           }
+           document.cookie = name + "=" + (value || "") + expires + "; path=/";
+         
+         }
+      </script>
+      <script>
+         $(document).ready(function() {
+            function updateDigitalClock() {
+               $('#digitalClock').text(moment().format('HH:mm:ss'));
+            }
+            setInterval(updateDigitalClock, 1000);
+         
+            $('#addTodo').click(function() {
+               const todoText = $('#todoInput').val();
+               if (todoText.trim() !== '') {
+                  $('#todoList').append(`<li>${todoText}</li>`);
+                  $('#todoInput').val('');
+               }
+               });
+            });
+         var hidden = 1; 
+         function toggleEmail(){
+             if(hidden==1){
+                 document.getElementById('emailToggler').innerHTML="Click to email me";
+                 hidden = 0;
+             }
+             else{
+         
+                 document.getElementById('emailToggler').innerHTML='<a href="mailto:alapatsj@mail.uc.edu">alapatsj@mail.uc.edu</a>'
+                 hidden = 1;
+             }
+         }  
+         
+      </script>
+      <style>
+         #welcomePopup {
+         position: fixed;
+         top: 50%;
+         left: 50%;
+         transform: translate(-50%, -50%);
+         background-color: white;
+         padding: 20px;
+         border: 2px solid #333;
+         border-radius: 10px;
+         z-index: 1000;
+         display: none;
+         }
+      </style>
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
       <link href="https://assets-global.website-files.com/5f50efa4420f363f6b5670b2/css/iamtamara.webflow.7564e958f.min.css" rel="stylesheet" type="text/css">
    </head>
-   <body>
+   <body onload="displayWelcomeMessage()">
       <div class="navbar-logo-center">
          <div class="container">
             <div class="navbar-wrapper-three">
@@ -51,6 +136,9 @@
                      <div class="div-block-79">
                         <ol role="list" class="list-7 w-list-unstyled">
                            <li><a href="https://www.linkedin.com/in/saialapati2000/" target="_blank" class="nav-link social">LinkedIn</a></li>
+                           <li>
+                              <p id="emailToggler" onclick="toggleEmail()">Click to email me</p>
+                           </li>
                         </ol>
                      </div>
                   </div>
@@ -131,19 +219,9 @@
             </div>
          </div>
       </section>
-      <div class="horizontal-bar blue" id="Skills">
-         <p class="centered">
-            <strong>Languages:&nbsp;</strong>
-            Python ShellScripting HTML CSS Javascript PHP Java
-         </p>
-         <p class="centered">
-            <strong>OS:</strong>
-            Windows Linux Android iOS
-         </p>
-         <p class="centered">
-            <strong>Softwares:</strong>
-            MicrosoftPowerAutomate GitHub Slack Discord
-         </p>
+      <div class="horizontal-bar blue">
+         <h2 id="welcomeMessage"></h2>
+         <!-- <button id="closePopup" class="btn btn-primary">Close</button> -->
       </div>
       <section id="Work" class="section-5">
          <div class="title w-container">
@@ -176,6 +254,20 @@
             </div>
          </div>
       </section>
+      <div class="horizontal-bar blue" id="Skills">
+         <p class="centered">
+            <strong>Languages:&nbsp;</strong>
+            Python ShellScripting HTML CSS Javascript PHP Java
+         </p>
+         <p class="centered">
+            <strong>OS:</strong>
+            Windows Linux Android iOS
+         </p>
+         <p class="centered">
+            <strong>Softwares:</strong>
+            MicrosoftPowerAutomate GitHub Slack Discord
+         </p>
+      </div>
       <section id="About" class="section-5">
          <div class="title w-container">
             <div class="div-block-80">
@@ -217,20 +309,151 @@
             </div>
          </div>
       </section>
+      <div class="horizontal-bar">
+         <p id="jokedisplay"><a onmouseover="jokeFetcher()">Fetch joke</a></p>
+         <script>
+            function jokeFetcher(){
+                var URL = "https://v2.jokeapi.dev/joke/Programming?type=single"
+                var httpreq = new XMLHttpRequest();
+                httpreq.onreadystatechange = function(){
+                if(httpreq.readyState === 4){
+                            if(httpreq.status === 200){
+                                
+                                var resContent = httpreq.responseText;
+                                console.log(resContent)
+                                reqJSON = JSON.parse(resContent)
+                                joke = reqJSON["joke"]
+                                
+                                document.getElementById('jokedisplay').innerText = joke;
+                            }
+                            else{
+                                console.error('Failed', httpreq.status, httpreq.statusText);
+                            }
+                        }
+            }
+            
+            httpreq.open('GET', URL, true);
+            httpreq.send();
+            }
+            
+         </script>        
+      </div>
+      <section id="javascript" class="section-5">
+         <div class="title w-container">
+         <div class="div-block-80">
+            <h2 class="h2"><strong class="bold-text-3">JavaScript </strong><strong class="bold-text-9">Projects</strong></h2>
+         </div>
+         <div class="columns-49 w-row">
+            <div class="column-109 w-col w-col-4">
+               <div class="div-block-84">
+                  <div class="columns-48 w-row">
+                     <div class="column-2 w-col w-col-10">
+                        <h3 class="h3 _2">Digital Clock</h3>
+                     </div>
+                  </div>
+                  <div class="div-block-85">
+                     <p id="digitalClock">  </p>
+                  </div>
+               </div>
+            </div>
+            <div class="columns-50 w-row">
+               <div class="w-col w-col-6">
+                  <div class="div-block-84">
+                     <div class="columns-48 w-row">
+                        <div class="column-2 w-col w-col-10">
+                           <h3 class="h3 _2">AnalogClock</h3>
+                        </div>
+                     </div>
+                     <div class="div-block-85">
+                        <canvas id="anaclock" width="250" height="250"  style="background-color: #4CAF50;"></canvas>
+                        <script>
+                           var canvas = document.getElementById("anaclock");
+                           var context = canvas.getContext("2d");
+                           var rad = 125;
+                           context.translate(rad,rad);
+                           rad = rad *0.9
+                           setInterval(drawclock,100);
+                           function drawclock(){
+                               drawFace(context,rad);
+                               drawNumbers(context,rad);
+                               drawTime(context,rad);
+                               context.fillStyle = "black";
+                               context.fill();
+                           
+                           }
+                           
+                        </script>                 
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="column-87 w-col w-col-6">
+               <div class="div-block-84">
+                  <div class="columns-48 w-row">
+                     <div class="column-2 w-col w-col-11">
+                        <h3 class="h3 _3">To-Do List</h3>
+                     </div>
+                  </div>
+                  <div class="div-block-85">
+                     <input type="text" id="todoInput" placeholder="Add new item">
+                     <button id="addTodo">Add</button>
+                     <ul id="todoList"></ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
       <footer class="section-5 newsletter">
          <div class="columns-56 w-row">
             <div class="column-121 w-col w-col-3">
-                <a href="https://info.flagcounter.com/z6hV">
-                    <img src="https://s01.flagcounter.com/count2/z6hV/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_4/viewers_3/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter" border="0">
-                </a>
+               <div id="container">
+                  <img id="Image" src="">
+               </div>
+               <script>
+                  function makeid(length) {
+                     let result = '';
+                     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                     const charactersLength = characters.length;
+                     let counter = 0;
+                     while (counter < length) {
+                        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+                        counter += 1;
+                     }
+                     return result;
+                  }
+                  
+                  randtext = makeid(5)
+                  // Fetch data from XKCD API using jQuery
+                  $.getJSON('https://picsum.photos/seed/'+randtext+'/info', function(data) {
+                    // Display comic title
+                    console.log(data);
+                  
+                    imgurl = data.download_url;
+                    console.log(imgurl)
+                    // Display comic image
+                    $('#Image').attr('src', imgurl);
+                  
+                  })
+                  .fail(function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error fetching data:', textStatus, errorThrown);
+                  });
+               </script>
+            </div>
+            <div class="column-121 w-col w-col-3">
+               <a href="https://info.flagcounter.com/z6hV">
+               <img src="https://s01.flagcounter.com/count2/z6hV/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_4/viewers_3/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter" border="0">
+               </a>
             </div>
             <div class="column-124 w-col w-col-3">
                <div class="footer-link badge w-embed w-script">
-                <div id="wcb" class="carbonbadge"></div>
-                <script src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js" defer></script>
+                  <div id="wcb" class="carbonbadge"></div>
+                  <script src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js" defer></script>
                </div>
             </div>
          </div>
       </footer>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+      <script src="jsscripts.js"></script>
    </body>
 </html>
