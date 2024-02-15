@@ -423,14 +423,11 @@
                   }
                   
                   randtext = makeid(5)
-                  // Fetch data from XKCD API using jQuery
                   $.getJSON('https://picsum.photos/seed/'+randtext+'/info', function(data) {
-                    // Display comic title
                     console.log(data);
                   
                     imgurl = data.download_url;
                     console.log(imgurl)
-                    // Display comic image
                     $('#Image').attr('src', imgurl);
                   
                   })
